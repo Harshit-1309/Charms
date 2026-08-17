@@ -300,11 +300,14 @@ class RomanticAudioEngine {
     if (!this.ctx) return;
 
     if (!enable) {
-      if (this.fireGain) {
-        this.fireGain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 1);
+      if (this.fireNode) {
+        (this.fireNode as any).disconnect();
+        this.fireNode = null;
       }
       return;
     }
+    
+    if (this.fireNode) return;
 
     const fireInterval = setInterval(() => {
       if (!this.ctx) return;
