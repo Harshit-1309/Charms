@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const MONGO_URI = process.env.CONNECTION_STRING || 'mongodb+srv://harsh13:Harsh1998@harshcluster.4rgtm44.mongodb.net/charms?retryWrites=true&w=majority';
+const MONGO_URI = process.env.CONNECTION_STRING || process.env.MONGO_URI || 'mongodb://localhost:27017/charms';
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-charmi-key-123';
 
 app.use(cors());
