@@ -45,5 +45,26 @@ export const dateNightIdeas: DateNightIdea[] = [
     category: "Spontaneous Fun",
     description: "Hop in the car in pajamas, drive to the 24/7 bakery, and get warm cookies.",
     setupTime: "5 mins"
+  },
+  {
+    id: "dn5",
+    title: "At-Home Spa Night",
+    category: "Relaxation",
+    description: "Light scented candles, put on face masks, play soothing lo-fi music, and give each other massages.",
+    setupTime: "10 mins"
+  },
+  {
+    id: "dn6",
+    title: "Sunset Walk & Ice Cream",
+    category: "Sweet & Simple",
+    description: "Take a quiet walk as the sun goes down, holding hands and grabbing a scoop of your favorite ice cream.",
+    setupTime: "No setup"
+  },
+  {
+    id: "dn7",
+    title: "Painting & Wine",
+    category: "Creative Fun",
+    description: "Get two small canvases, pour some wine, and try to paint each other's portraits. Laughter guaranteed.",
+    setupTime: "20 mins"
   }
 ];

@@ -32,8 +32,14 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
   onAcceptProposal,
   onNavigateToForever,
 }) => {
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState<number>(coupleConfig.isProposalAccepted ? 7 : 0);
   const [showHugModal, setShowHugModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (coupleConfig.isProposalAccepted) {
+      setStep(7);
+    }
+  }, [coupleConfig.isProposalAccepted]);
 
   // Confirmation steps texts
   const confirmationQuestions = [

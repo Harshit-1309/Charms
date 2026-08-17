@@ -316,7 +316,7 @@ export default function App() {
     setCoupleConfig((prev) => ({ 
       ...prev, 
       isProposalAccepted: true,
-      proposalAcceptedAt: new Date().toISOString()
+      proposalAcceptedAt: prev.proposalAcceptedAt || new Date().toISOString()
     }));
   }, []);
 

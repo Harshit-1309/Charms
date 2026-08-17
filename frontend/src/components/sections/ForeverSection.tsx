@@ -43,6 +43,9 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
     appreciationList[0]?.text || 'You make every moment magical.'
   );
 
+  const carouselRow1 = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', 'aa.jpeg', 'ad.jpeg', 'ag.jpg', 'ai.jpg', 'ak.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'dress.jpeg', 'her.jpeg'];
+  const carouselRow2 = ['j.jpeg', 'k.jpeg', 'l.jpeg', 'm.jpeg', 'n.jpeg', 'o.jpeg', 'p.jpeg', 'q.jpeg', 'r.jpeg', 's.jpeg', 't.jpeg', 'u.jpeg', 'y.jpeg', 'z.jpeg'];
+
   // Live Timer Ticker
   useEffect(() => {
     const calculateTime = () => {
@@ -103,13 +106,41 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
         </p>
       </div>
 
+      {/* Infinite Photo Carousels */}
+      <div 
+        className="w-full overflow-hidden space-y-4 py-4 relative z-0 opacity-90 hover:opacity-100 transition-opacity"
+        style={{ 
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', 
+          maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' 
+        }}
+      >
+        
+        {/* Row 1 (Right to Left) */}
+        <div className="carousel-track animate-scroll-left flex gap-4">
+          {[...carouselRow1, ...carouselRow1].map((img, i) => (
+            <div key={`row1-${i}`} className="w-28 h-28 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 shadow-lg border border-white/10 hover:border-rose-400/50 transition-colors">
+              <img src={`/infinity/${img}`} alt="Our Memory" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2 (Left to Right) */}
+        <div className="carousel-track animate-scroll-right flex gap-4">
+          {[...carouselRow2, ...carouselRow2].map((img, i) => (
+            <div key={`row2-${i}`} className="w-28 h-28 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 shadow-lg border border-white/10 hover:border-amber-400/50 transition-colors">
+              <img src={`/infinity/${img}`} alt="Our Memory" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Live Time Together Clock */}
       <div className="glass-card-luxury p-8 sm:p-10 rounded-3xl border border-amber-400/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/15 via-rose-500/10 to-transparent pointer-events-none" />
 
         <div className="flex items-center justify-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
           <Clock className="w-4 h-4" />
-          <span>Time Spent Falling In Love</span>
+          <span>Time Since You Became Mine</span>
         </div>
 
         <h3 className="font-serif-title font-bold text-2xl sm:text-3xl text-white">
@@ -170,7 +201,7 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
           <div className="space-y-2">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
               <Gift className="w-4 h-4 text-rose-400" />
-              Spin For Tonight's Date Idea
+              Spin For Our First Date Idea
             </span>
             <h3 className="font-serif-title font-bold text-xl sm:text-2xl text-white">
               Spontaneous Date Generator
@@ -248,19 +279,42 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
       </div>
 
       {/* Official Love Certificate Card */}
-      <div className="glass-card-luxury p-8 sm:p-10 rounded-3xl border border-amber-400/40 max-w-xl mx-auto text-center space-y-4 shadow-2xl bg-gradient-to-br from-slate-900/90 via-purple-950/70 to-slate-900/90">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 text-slate-950 flex items-center justify-center mx-auto shadow-xl ring-4 ring-amber-400/30">
-          <Crown className="w-8 h-8 fill-slate-950" />
+      <div className="glass-card-luxury p-8 sm:p-10 rounded-3xl border border-amber-400/40 max-w-xl mx-auto text-center space-y-5 shadow-2xl bg-gradient-to-br from-slate-900/90 via-purple-950/70 to-slate-900/90 relative overflow-hidden">
+        
+        {/* Photo & Crown Badge */}
+        <div className="relative w-28 h-28 mx-auto">
+          <div className="w-full h-full rounded-full overflow-hidden border-4 border-amber-400/50 shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+            <img 
+              src="/charmi/8.jpg" 
+              alt="Our Love" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 text-slate-950 flex items-center justify-center shadow-lg border-2 border-slate-900">
+            <Crown className="w-5 h-5 fill-slate-950" />
+          </div>
         </div>
-        <h3 className="font-serif-title font-bold text-2xl sm:text-3xl text-white text-glow">
+
+        <h3 className="font-serif-title font-bold text-2xl sm:text-3xl text-white text-glow pt-2">
           Certificate of Infinite Love
         </h3>
-        <p className="text-xs sm:text-sm text-slate-300 font-sans-ui leading-relaxed">
-          Officially certified that <strong className="text-white font-bold">{coupleConfig.partner1Name}</strong> & <strong className="text-white font-bold">{coupleConfig.partner2Name}</strong> belong together across all stars and dimensions.
+        
+        <p className="text-xs sm:text-sm text-slate-300 font-sans-ui leading-relaxed px-4">
+          Officially certified that <strong className="text-white font-bold text-glow">{coupleConfig.partner1Name}</strong> & <strong className="text-white font-bold text-glow">{coupleConfig.partner2Name}</strong> belong together across all stars and dimensions.
         </p>
-        <div className="pt-2 flex items-center justify-center gap-2 text-xs text-amber-300 font-medium">
-          <Check className="w-4 h-4 text-emerald-400" />
-          <span>Accepted with all my heart • Sealed into our universe</span>
+
+        <div className="bg-white/5 border border-white/10 rounded-xl p-3 inline-block mt-2">
+          <div className="flex flex-col items-center justify-center gap-1.5 text-xs text-amber-200 font-medium">
+            <div className="flex items-center gap-1.5 text-amber-300">
+              <Check className="w-4 h-4 text-emerald-400" />
+              <span className="uppercase tracking-widest font-bold text-[10px]">Eternity Sealed</span>
+            </div>
+            {coupleConfig.proposalAcceptedAt && (
+              <span className="text-slate-300 font-mono mt-1 text-[11px]">
+                Accepted on {new Date(coupleConfig.proposalAcceptedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(coupleConfig.proposalAcceptedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

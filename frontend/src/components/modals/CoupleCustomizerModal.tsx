@@ -112,19 +112,7 @@ export const CoupleCustomizerModal: React.FC<CoupleCustomizerModalProps> = React
             </div>
           </div>
 
-          {/* Custom Path/URL Input */}
-          <div className="space-y-1.5">
-            <label className="block text-slate-300 font-medium text-[11px]">
-              Or enter custom photo path / URL
-            </label>
-            <input
-              type="text"
-              value={partner2PhotoUrl}
-              onChange={(e) => setPartner2PhotoUrl(e.target.value)}
-              placeholder="e.g. /charmi/1.jpg or web image URL"
-              className="w-full glass-input rounded-xl px-3.5 py-2.5 text-white text-xs"
-            />
-          </div>
+
 
           {/* Save Button */}
           <button
