@@ -1,0 +1,6 @@
+{
+  "name": "Our Little Universe",
+  "description": "An interactive romantic universe experience featuring animated night skies, floating planet navigation, memory gallery, journey timeline, vinyl music player, love letters, future dreams, proposal vault, and protected forever section.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

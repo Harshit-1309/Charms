@@ -1,0 +1,16 @@
+{
+  "name": "react-example-root",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "npm run dev:all",
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "clean": "rm -rf frontend/dist backend/dist frontend/node_modules backend/node_modules node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.4"
+  }
+}
