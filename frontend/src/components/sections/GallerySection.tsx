@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { romanticAudio } from '../../utils/audio';
 import { triggerHeartConfetti } from '../../utils/confetti';
+import { useActivityLogger } from '../../hooks/useActivityLogger';
 
 interface GallerySectionProps {
   photos: PhotoItem[];
@@ -24,9 +25,11 @@ interface GallerySectionProps {
 export const GallerySection: React.FC<GallerySectionProps> = React.memo(({
   photos,
   onAddPhoto,
+  onLikePhoto,
 }) => {
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { logActivity } = useActivityLogger();
 
   // New photo form state
   const [title, setTitle] = useState('');
@@ -50,6 +53,15 @@ export const GallerySection: React.FC<GallerySectionProps> = React.memo(({
   const handlePrevPhoto = () => {
     if (activeLightboxIndex === null) return;
     setActiveLightboxIndex((activeLightboxIndex - 1 + photos.length) % photos.length);
+  };
+
+  const handleLike = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (onLikePhoto) {
+      onLikePhoto(id);
+      logActivity('LIKED_PHOTO', { photoId: id });
+      triggerHeartConfetti();
+    }
   };
 
   const handleAddSubmit = (e: React.FormEvent) => {
@@ -93,13 +105,7 @@ export const GallerySection: React.FC<GallerySectionProps> = React.memo(({
           </p>
         </div>
 
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-6 py-3.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 text-white font-medium text-xs tracking-wider uppercase shadow-xl shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/20 self-start md:self-auto"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Photo Memory</span>
-        </button>
+
       </div>
 
       {/* Masonry / Floating Photo Grid */}

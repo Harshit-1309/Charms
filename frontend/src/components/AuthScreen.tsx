@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, User, Lock, ArrowRight, Loader2, Mail, Eye, EyeOff } from 'lucide-react';
 
 interface AuthScreenProps {
-  onAuthSuccess: (token: string, username: string) => void;
+  onAuthSuccess: (token: string, username: string, isAdmin?: boolean) => void;
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
@@ -35,7 +35,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthSuccess }) => {
         throw new Error(data.error || 'Authentication failed');
       }
 
-      onAuthSuccess(data.token, data.username);
+      onAuthSuccess(data.token, data.username, data.isAdmin);
     } catch (err: any) {
       setError(err.message);
     } finally {

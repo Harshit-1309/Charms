@@ -592,6 +592,30 @@ export const initialPiecesOfYou: PieceOfYouItem[] = [
     title: "Chatpate Tops",
     photoUrl: "/Aesthetics/tops.jpg",
     aspectRatio: "portrait"
+  },
+  {
+    id: "poy17",
+    title: "Working Out",
+    photoUrl: "/Aesthetics/workout.avif",
+    aspectRatio: "portrait"
+  },
+  {
+    id: "poy18",
+    title: "Leopard Printed Fits",
+    photoUrl: "/Aesthetics/leopard.jpg",
+    aspectRatio: "portrait"
+  },
+  {
+    id: "poy19",
+    title: "Formula 1",
+    photoUrl: "/Aesthetics/formula11.jpg",
+    aspectRatio: "landscape"
+  },
+  {
+    id: "poy20",
+    title: "Instagram Reach",
+    photoUrl: "/Aesthetics/insta.jpg",
+    aspectRatio: "portrait"
   }
 ];
 
@@ -668,21 +692,17 @@ export const appreciationList: AppreciationItem[] = [
   },
   {
     id: "a11",
-    title: "✨ Golden Secret: How Beautifully You Maintain Yourself",
+    title: "How Beautifully You Maintain Yourself",
     text: "The dedication, care, and effortless grace you pour into your style, health, and skincare. Watching you glow from the inside out and carry yourself with such love is truly mesmerizing.",
     emoji: "👑",
-    photoUrl: "/charmi/z.jpeg",
-    isGoldenCard: true,
-    unlockThreshold: 3
+    photoUrl: "/charmi/z.jpeg"
   },
   {
     id: "a12",
-    title: "👑 Golden Vault: That Unmatched Hotness, Babe",
+    title: "That Unmatched Hotness, Babe",
     text: "Let's be completely real—you are downright breathtaking in every single way. Your aura, your confidence, and that effortless hotness have me falling head over heels every single day.",
     emoji: "🔥",
-    photoUrl: "/charmi/r.jpeg",
-    isGoldenCard: true,
-    unlockThreshold: 4
+    photoUrl: "/charmi/r.jpeg"
   }
 ];
 

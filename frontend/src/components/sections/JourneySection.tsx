@@ -84,13 +84,7 @@ export const JourneySection: React.FC<JourneySectionProps> = React.memo(({
           From that first magical glance to all the quiet adventures and milestones that built our world.
         </p>
 
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="mt-4 px-6 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white font-medium text-xs tracking-wider uppercase shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer border border-white/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Milestone</span>
-        </button>
+
       </div>
 
       {/* Vertical Animated Timeline Line */}

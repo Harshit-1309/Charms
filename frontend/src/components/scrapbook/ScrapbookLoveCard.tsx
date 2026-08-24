@@ -35,8 +35,8 @@ const DEFAULT_ROMANTIC_TITLES = [
   "The Way You Slay in Traditional",
   "Your Short Hair & Baddie Energy",
   "Your Sweet Little Kisses",
-  "✨ Golden Secret: How Beautifully You Maintain Yourself",
-  "👑 Golden Vault: That Unmatched Hotness, Babe"
+  "How Beautifully You Maintain Yourself",
+  "That Unmatched Hotness, Babe"
 ];
 
 export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
@@ -63,10 +63,12 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
     }
   };
 
-  const displayTitle = item.title?.trim() || DEFAULT_ROMANTIC_TITLES[index % DEFAULT_ROMANTIC_TITLES.length];
+  let rawTitle = item.title?.trim() || DEFAULT_ROMANTIC_TITLES[index % DEFAULT_ROMANTIC_TITLES.length];
+  const displayTitle = rawTitle.replace(/^✨ Golden Secret:\s*/, '').replace(/^👑 Golden Vault:\s*/, '');
 
-  const isLocked = Boolean(item.isGoldenCard && item.unlockThreshold && openedCount < item.unlockThreshold);
-  const unlockRemaining = item.unlockThreshold ? Math.max(0, item.unlockThreshold - openedCount) : 0;
+  const isLocked = false;
+  const unlockRemaining = 0;
+  const isGoldenCard = false;
 
   // Handle opening / unfolding
   const handleCardClick = () => {
@@ -78,7 +80,7 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
     if (!isOpen) {
       romanticAudio.playEnvelopeOpen();
       setTimeout(() => romanticAudio.playPianoNote(587.33, 1.8), 200);
-      if (item.isGoldenCard) {
+      if (isGoldenCard) {
         triggerHeartConfetti();
       }
     }
@@ -87,7 +89,7 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
 
   // Seal & hover styles
   const getCardStyles = () => {
-    if (item.isGoldenCard) {
+    if (isGoldenCard) {
       return {
         seal: 'from-amber-400 to-yellow-600 border-amber-300',
         borderHover: 'hover:border-amber-400/60 shadow-amber-500/20'
@@ -113,7 +115,7 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
       }`}
     >
       {/* Golden Card Halo */}
-      {item.isGoldenCard && !isLocked && (
+      {isGoldenCard && !isLocked && (
         <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400/40 via-yellow-200/40 to-amber-500/40 blur-md animate-pulse pointer-events-none" />
       )}
 
@@ -122,7 +124,7 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
         layout
         onClick={handleCardClick}
         className={`relative overflow-hidden rounded-3xl cursor-pointer transition-all duration-300 border ${
-          item.isGoldenCard
+          isGoldenCard
             ? 'bg-gradient-to-b from-amber-950/40 via-slate-900/90 to-purple-950/80 border-amber-400/50 shadow-2xl shadow-amber-500/20'
             : 'glass-card-luxury bg-slate-900/80 border-white/15 hover:border-white/30 shadow-xl'
         } ${style.borderHover}`}
@@ -169,7 +171,7 @@ export const ScrapbookLoveCard: React.FC<ScrapbookLoveCardProps> = ({
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/25 text-amber-200 border border-amber-400/50 flex items-center gap-1 shadow-sm animate-pulse">
                     <Sparkles className="w-3 h-3 text-amber-300" /> Today's Daily Love Note
                   </span>
-                ) : item.isGoldenCard ? (
+                ) : isGoldenCard ? (
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/40 flex items-center gap-1">
                     <Crown className="w-3 h-3 text-amber-300" /> Milestone Memory
                   </span>

@@ -33,6 +33,7 @@ import { LettersSection } from './components/sections/LettersSection';
 import { PiecesOfYouSection } from './components/sections/PiecesOfYouSection';
 import { ProposalVault } from './components/sections/ProposalVault';
 import { ForeverSection } from './components/sections/ForeverSection';
+import { AdminDashboard } from './components/sections/AdminDashboard';
 import { AuthScreen } from './components/AuthScreen';
 
 import { CoupleCustomizerModal } from './components/modals/CoupleCustomizerModal';
@@ -43,10 +44,12 @@ import { HeartbeatHugOverlay } from './components/HeartbeatHugOverlay';
 import { triggerHeartConfetti, triggerStardustBurst } from './utils/confetti';
 import { romanticAudio } from './utils/audio';
 import { Sparkles, Heart, Moon } from 'lucide-react';
+import { useActivityLogger } from './hooks/useActivityLogger';
 
 export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('auth_token'));
   const [username, setUsername] = useState<string | null>(localStorage.getItem('auth_username'));
+  const [isAdmin, setIsAdmin] = useState<boolean>(localStorage.getItem('auth_is_admin') === 'true');
   const [isLoadingDB, setIsLoadingDB] = useState(true);
 
   const [coupleConfig, setCoupleConfig] = useState<CoupleConfig>(emptyCoupleConfig);
@@ -62,17 +65,20 @@ export default function App() {
   // Active Section
   const [currentSection, setCurrentSection] = useState<SectionId>('landing');
 
-  // Visited Sections for Evolving Universe
   const [visitedSections, setVisitedSections] = useState<SectionId[]>(() =>
     ['landing', 'planets']
   );
 
-  // Track new section visits
+  const { logActivity } = useActivityLogger();
+
+  // Track new section visits and log activity
   useEffect(() => {
     if (!visitedSections.includes(currentSection)) {
       setVisitedSections((prev) => [...prev, currentSection]);
     }
-  }, [currentSection]);
+    // Log section visit
+    logActivity('VISITED_SECTION', { section: currentSection });
+  }, [currentSection, logActivity]);
 
   // Ambient Toggles
   const [isStargazingMode, setIsStargazingMode] = useState(false);
@@ -320,18 +326,32 @@ export default function App() {
     }));
   }, []);
 
-  const handleAuthSuccess = (newToken: string, newUsername: string) => {
+  const handleAuthSuccess = (newToken: string, newUsername: string, newIsAdmin?: boolean) => {
     localStorage.setItem('auth_token', newToken);
     localStorage.setItem('auth_username', newUsername);
+    if (newIsAdmin) localStorage.setItem('auth_is_admin', 'true');
     setToken(newToken);
     setUsername(newUsername);
+    setIsAdmin(!!newIsAdmin);
+    
+    // Log login activity
+    fetch('/api/activity/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${newToken}`
+      },
+      body: JSON.stringify({ action: 'LOGIN', details: {} })
+    }).catch(console.error);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_username');
+    localStorage.removeItem('auth_is_admin');
     setToken(null);
     setUsername(null);
+    setIsAdmin(false);
   };
 
   if (!token) {
@@ -373,6 +393,7 @@ export default function App() {
         onToggleMusic={toggleMusic}
         onLogout={handleLogout}
         username={username || ''}
+        isAdmin={isAdmin}
       />
 
       {/* Real-time Heartbeat & Hug Enchantment Overlay */}
@@ -595,6 +616,18 @@ export default function App() {
                 coupleConfig={coupleConfig}
                 appreciationList={appreciations}
               />
+            </motion.div>
+          )}
+
+          {currentSection === 'admin' && isAdmin && (
+            <motion.div
+              key="admin"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AdminDashboard />
             </motion.div>
           )}
         </AnimatePresence>

@@ -55,10 +55,9 @@ export const AboutYouSection: React.FC<AboutYouSectionProps> = React.memo(({
     setTimeout(() => romanticAudio.playPianoNote(659.25, 1.5), 150);
     setTimeout(() => romanticAudio.playPianoNote(783.99, 2.0), 300);
 
-    // Pick an unopened card first, otherwise any unlocked card
+    // Pick an unopened card first
     const available = appreciationList.filter((item) => {
-      const isLocked = Boolean(item.isGoldenCard && item.unlockThreshold && openedCount < item.unlockThreshold);
-      return !isLocked && !openedCards[item.id];
+      return !openedCards[item.id];
     });
 
     const target = available.length > 0
@@ -182,26 +181,7 @@ export const AboutYouSection: React.FC<AboutYouSectionProps> = React.memo(({
               </h3>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* ✨ Surprise Me Button */}
-              <button
-                onClick={handleSurpriseMe}
-                className="px-4 py-2.5 rounded-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white font-bold text-xs shadow-lg shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-amber-300/40"
-              >
-                <Sparkles className="w-4 h-4 text-amber-200 animate-spin" style={{ animationDuration: '6s' }} />
-                <span>✨ Surprise Me</span>
-              </button>
 
-              {/* + Write New Memory Button */}
-              <button
-                onClick={() => setIsWriteModalOpen(true)}
-                className="px-4 py-2.5 rounded-full glass-pill hover:bg-white/15 text-slate-200 font-medium text-xs shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer border border-white/20"
-              >
-                <Plus className="w-4 h-4 text-rose-400" />
-                <span>Write Memory</span>
-              </button>
-            </div>
           </div>
 
           {/* Scrapbook Cards Grid */}

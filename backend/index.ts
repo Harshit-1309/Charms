@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { AppState, User } from './models.js';
+import { AppState, User, ActivityLog } from './models.js';
 import { initialPiecesOfYou, appreciationList, initialPhotos, initialJourney, initialSongs, initialLetters } from './seedData.js';
 
 dotenv.config();
@@ -39,6 +39,18 @@ const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => 
   }
 };
 
+const adminMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Forbidden: Admins only' });
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({ error: 'Server error verifying admin status' });
+  }
+};
+
 // Signup Route
 app.post('/api/auth/signup', async (req, res) => {
   try {
@@ -62,6 +74,7 @@ app.post('/api/auth/signup', async (req, res) => {
         isProposalAccepted: false,
         anniversaryTitle: 'Our Journey',
         secretMessage: 'A beautiful journey begins.',
+        partner2PhotoUrl: '/charmi/1.jpg',
       },
       photos: initialPhotos,
       journey: initialJourney,
@@ -73,7 +86,7 @@ app.post('/api/auth/signup', async (req, res) => {
     await appState.save();
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, username: user.username });
+    res.json({ token, username: user.username, isAdmin: user.isAdmin });
   } catch (err) {
     console.error('Signup error:', err);
     res.status(500).json({ error: 'Failed to sign up' });
@@ -92,7 +105,7 @@ app.post('/api/auth/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, username: user.username });
+    res.json({ token, username: user.username, isAdmin: user.isAdmin });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Failed to log in' });
@@ -127,6 +140,50 @@ app.post('/api/data', authMiddleware, async (req: AuthRequest, res: Response) =>
   } catch (error) {
     console.error('Error saving data:', error);
     res.status(500).json({ error: 'Failed to save data' });
+  }
+});
+
+// --- Activity Tracking & Admin Routes ---
+
+// Log an activity
+app.post('/api/activity/log', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const { action, details } = req.body;
+    if (!action) return res.status(400).json({ error: 'Action is required' });
+
+    const logEntry = new ActivityLog({
+      userId: req.userId,
+      action,
+      details: details || {}
+    });
+    
+    await logEntry.save();
+    res.status(201).json({ success: true });
+  } catch (err) {
+    console.error('Error logging activity:', err);
+    res.status(500).json({ error: 'Failed to log activity' });
+  }
+});
+
+// Admin: Get all users
+app.get('/api/admin/users', authMiddleware, adminMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const users = await User.find({}, '-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Admin: Get specific user activity log
+app.get('/api/admin/activity/:targetUserId', authMiddleware, adminMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const activities = await ActivityLog.find({ userId: req.params.targetUserId }).sort({ createdAt: -1 });
+    res.json(activities);
+  } catch (err) {
+    console.error('Error fetching activity log:', err);
+    res.status(500).json({ error: 'Failed to fetch activity log' });
   }
 });
 

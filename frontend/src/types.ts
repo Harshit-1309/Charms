@@ -8,7 +8,8 @@ export type SectionId =
   | 'letters'
   | 'pieces'
   | 'proposal'
-  | 'forever';
+  | 'forever'
+  | 'admin';
 
 export interface CoupleConfig {
   partner1Name: string;

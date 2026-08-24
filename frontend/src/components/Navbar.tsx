@@ -19,8 +19,9 @@ import {
   Flame,
   UserCheck,
   Orbit,
-  Disc3,
-  LogOut
+  LogOut,
+  Shield,
+  Disc3
 } from 'lucide-react';
 import { romanticAudio } from '../utils/audio';
 
@@ -34,6 +35,7 @@ interface NavbarProps {
   onToggleMusic: () => void;
   onLogout: () => void;
   username: string;
+  isAdmin?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = React.memo(({
@@ -45,11 +47,13 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
   isPlayingMusic,
   onToggleMusic,
   onLogout,
-  username
+  username,
+  isAdmin
 }) => {
   const [isRainOn, setIsRainOn] = useState(false);
   const [isFireOn, setIsFireOn] = useState(false);
   const [isAudioMenuOpen, setIsAudioMenuOpen] = useState(false);
+  const [showLockedNotice, setShowLockedNotice] = useState(false);
 
   const toggleRain = () => {
     const next = !isRainOn;
@@ -79,6 +83,14 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
       isLocked: !coupleConfig.isProposalAccepted
     }
   ];
+
+  if (isAdmin) {
+    navItems.push({
+      id: 'admin',
+      label: 'Admin',
+      icon: <Shield className="w-3.5 h-3.5 text-emerald-400" />
+    });
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 pointer-events-none">
@@ -112,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
                 data-cursor={item.id === 'proposal' ? 'ring' : 'pointer'}
                 onClick={() => {
                   if (item.isLocked) {
-                    onNavigate('proposal');
+                    setShowLockedNotice(true);
                   } else {
                     onNavigate(item.id);
                   }
@@ -291,7 +303,7 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
               key={item.id}
               onClick={() => {
                 if (item.isLocked) {
-                  onNavigate('proposal');
+                  setShowLockedNotice(true);
                 } else {
                   onNavigate(item.id);
                 }
@@ -308,6 +320,55 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({
           );
         })}
       </div>
+
+      {/* Locked Notice Modal */}
+      <AnimatePresence>
+        {showLockedNotice && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md pointer-events-auto"
+            onClick={() => setShowLockedNotice(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-md w-full glass-card-luxury p-6 sm:p-8 rounded-3xl border border-rose-500/30 shadow-2xl text-center space-y-5"
+            >
+              <div className="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-2">
+                <Lock className="w-8 h-8 text-rose-400" />
+              </div>
+              <h3 className="font-serif-title font-bold text-2xl text-white">
+                Realm Locked
+              </h3>
+              <p className="text-slate-300 font-sans-ui text-sm leading-relaxed">
+                To enter the Afterlife, please visit the <strong>Vault</strong> tab first and answer all the questions positively. ❤️
+              </p>
+              
+              <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => setShowLockedNotice(false)}
+                  className="px-5 py-2.5 rounded-full glass-pill hover:bg-white/10 text-slate-300 text-sm font-medium transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowLockedNotice(false);
+                    onNavigate('proposal');
+                  }}
+                  className="px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white text-sm font-medium shadow-lg hover:scale-105 transition-all"
+                >
+                  Go to Vault
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 });

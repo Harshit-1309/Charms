@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx index.ts",
-    "seed": "tsx seed.ts"
+    "seed": "tsx seed.ts",
+    "make-admin": "tsx makeAdmin.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

@@ -34,6 +34,7 @@ export const PlanetNavigation: React.FC<PlanetNavigationProps> = React.memo(({
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [hoveredPlanetId, setHoveredPlanetId] = useState<string | null>(null);
   const [zoomingPlanetId, setZoomingPlanetId] = useState<string | null>(null);
+  const [showLockedNotice, setShowLockedNotice] = useState(false);
 
   // Parallax Tilt state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -171,8 +172,7 @@ export const PlanetNavigation: React.FC<PlanetNavigationProps> = React.memo(({
     romanticAudio.playHeartbeat();
 
     if (planet.isLocked) {
-      // Guide to proposal
-      onSelectSection('proposal');
+      setShowLockedNotice(true);
       return;
     }
 
@@ -220,6 +220,55 @@ export const PlanetNavigation: React.FC<PlanetNavigationProps> = React.memo(({
               <p className="font-serif-title text-2xl text-white font-bold mt-4 tracking-widest uppercase">
                 Entering Realm...
               </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Locked Notice Modal */}
+      <AnimatePresence>
+        {showLockedNotice && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+            onClick={() => setShowLockedNotice(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-md w-full glass-card-luxury p-6 sm:p-8 rounded-3xl border border-rose-500/30 shadow-2xl text-center space-y-5"
+            >
+              <div className="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-2">
+                <Lock className="w-8 h-8 text-rose-400" />
+              </div>
+              <h3 className="font-serif-title font-bold text-2xl text-white">
+                Realm Locked
+              </h3>
+              <p className="text-slate-300 font-sans-ui text-sm leading-relaxed">
+                To enter the Afterlife, please visit the <strong>Vault</strong> tab first and answer all the questions positively. ❤️
+              </p>
+              
+              <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => setShowLockedNotice(false)}
+                  className="px-5 py-2.5 rounded-full glass-pill hover:bg-white/10 text-slate-300 text-sm font-medium transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowLockedNotice(false);
+                    onSelectSection('proposal');
+                  }}
+                  className="px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white text-sm font-medium shadow-lg hover:scale-105 transition-all"
+                >
+                  Go to Vault
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

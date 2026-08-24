@@ -120,7 +120,7 @@ export const LandingHero: React.FC<LandingHeroProps> = React.memo(({
     triggerStardustBurst();
   };
 
-  const portraitUrl = coupleConfig.partner2PhotoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80";
+  const portraitUrl = coupleConfig.partner2PhotoUrl || "/charmi/1.jpg";
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-28 sm:pt-32 pb-16 z-10 overflow-hidden">
@@ -351,12 +351,7 @@ export const LandingHero: React.FC<LandingHeroProps> = React.memo(({
             <span>Click to hear my heart beat for you 💓</span>
           </button>
 
-          <button
-            onClick={onMoonClickNotice}
-            className="text-[11px] text-amber-200/80 hover:text-amber-200 underline underline-offset-4 decoration-amber-300/40 transition-colors cursor-pointer"
-          >
-            ✨ Celestial Secret: Tap the glowing moon above for hidden constellations!
-          </button>
+
         </motion.div>
 
       </motion.div>

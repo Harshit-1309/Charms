@@ -18,6 +18,7 @@ import {
 import { dateNightIdeas } from '../../data/staticData';
 import { romanticAudio } from '../../utils/audio';
 import { triggerHeartConfetti, triggerStardustBurst } from '../../utils/confetti';
+import { useActivityLogger } from '../../hooks/useActivityLogger';
 
 interface ForeverSectionProps {
   coupleConfig: CoupleConfig;
@@ -43,8 +44,10 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
     appreciationList[0]?.text || 'You make every moment magical.'
   );
 
-  const carouselRow1 = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', 'aa.jpeg', 'ad.jpeg', 'ag.jpg', 'ai.jpg', 'ak.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'dress.jpeg', 'her.jpeg'];
-  const carouselRow2 = ['j.jpeg', 'k.jpeg', 'l.jpeg', 'm.jpeg', 'n.jpeg', 'o.jpeg', 'p.jpeg', 'q.jpeg', 'r.jpeg', 's.jpeg', 't.jpeg', 'u.jpeg', 'y.jpeg', 'z.jpeg'];
+  const { logActivity } = useActivityLogger();
+
+  const carouselRow1 = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', 'aa.jpeg', 'ad.jpeg', 'ag.jpg', 'ai.jpg', 'ak.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'dress.jpeg', 'her.jpeg', 'xa.png', 'xb.jpg', 'xc.jpg'];
+  const carouselRow2 = ['j.jpeg', 'k.jpeg', 'l.jpeg', 'm.jpeg', 'n.jpeg', 'o.jpeg', 'p.jpeg', 'q.jpeg', 'r.jpeg', 's.jpeg', 't.jpeg', 'u.jpeg', 'y.jpeg', 'z.jpeg', 'xd.jpg', 'xe.jpg'];
 
   // Live Timer Ticker
   useEffect(() => {
@@ -74,6 +77,7 @@ export const ForeverSection: React.FC<ForeverSectionProps> = React.memo(({
   const handleSpinDateWheel = () => {
     romanticAudio.playHeartbeat();
     setIsSpinning(true);
+    logActivity('SPUN_DATE_GENERATOR', {});
     setTimeout(() => {
       const random = dateNightIdeas[Math.floor(Math.random() * dateNightIdeas.length)];
       setActiveDateIdea(random);
