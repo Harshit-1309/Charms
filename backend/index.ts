@@ -4,10 +4,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { AppState, User, ActivityLog } from './models.js';
 import { initialPiecesOfYou, appreciationList, initialPhotos, initialJourney, initialSongs, initialLetters } from './seedData.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +21,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-charmi-key-123';
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+
+// Serve static frontend files from the dist directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -185,6 +193,11 @@ app.get('/api/admin/activity/:targetUserId', authMiddleware, adminMiddleware, as
     console.error('Error fetching activity log:', err);
     res.status(500).json({ error: 'Failed to fetch activity log' });
   }
+});
+
+// Catch-all route to serve the frontend's index.html for any unhandled paths (React Router fallback)
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.listen(PORT, () => {
