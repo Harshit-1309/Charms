@@ -334,15 +334,17 @@ export default function App() {
     setUsername(newUsername);
     setIsAdmin(!!newIsAdmin);
     
-    // Log login activity
-    fetch('/api/activity/log', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${newToken}`
-      },
-      body: JSON.stringify({ action: 'LOGIN', details: {} })
-    }).catch(console.error);
+    // Log login activity only for normal users
+    if (!newIsAdmin) {
+      fetch('/api/activity/log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${newToken}`
+        },
+        body: JSON.stringify({ action: 'LOGIN', details: {} })
+      }).catch(console.error);
+    }
   };
 
   const handleLogout = () => {

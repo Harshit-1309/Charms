@@ -18,6 +18,7 @@ import { romanticAudio } from '../../utils/audio';
 import { PandaWatchman } from '../ui/PandaWatchman';
 import { MagicalDoors } from '../ui/MagicalDoors';
 import { RunawayButton } from '../ui/RunawayButton';
+import { useActivityLogger } from '../../hooks/useActivityLogger';
 
 interface ProposalVaultProps {
   coupleConfig: CoupleConfig;
@@ -34,6 +35,7 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
 }) => {
   const [step, setStep] = useState<number>(coupleConfig.isProposalAccepted ? 7 : 0);
   const [showHugModal, setShowHugModal] = useState<boolean>(false);
+  const { logActivity } = useActivityLogger();
 
   useEffect(() => {
     if (coupleConfig.isProposalAccepted) {
@@ -69,8 +71,18 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
     }
   ];
 
-  const handleNextConfirmation = () => {
+  const handleNextConfirmation = (isYes: boolean) => {
     romanticAudio.playHeartbeat();
+    
+    if (step > 0 && step <= 4) {
+      const currentQ = confirmationQuestions[step - 1];
+      logActivity('QUESTION_ANSWERED', {
+        question: currentQ.title,
+        answer: isYes ? currentQ.yesText : currentQ.noText,
+        step: step
+      });
+    }
+
     if (step < 4) {
       setStep(step + 1);
     } else {
@@ -89,6 +101,9 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
     triggerFireworksBurst();
     triggerHeartConfetti();
     romanticAudio.playCelebrationChime();
+    logActivity('PROPOSAL_ACCEPTED', {
+      message: 'User accepted the final proposal!'
+    });
     onAcceptProposal();
     setStep(7); // Final Accepted View
   };
@@ -96,6 +111,9 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
   const handleHugFirst = () => {
     setShowHugModal(true);
     romanticAudio.playHeartbeat();
+    logActivity('PROPOSAL_HUG_REQUESTED', {
+      message: 'User asked for a hug before answering.'
+    });
   };
 
   return (
@@ -165,13 +183,13 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
                         </p>
                         <div className="pt-2 flex flex-col gap-2">
                           <button
-                            onClick={handleNextConfirmation}
+                            onClick={() => handleNextConfirmation(true)}
                             className="w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white font-medium text-xs shadow-lg hover:scale-105 transition-all cursor-pointer"
                           >
                             {confirmationQuestions[step - 1].yesText}
                           </button>
                           <button
-                            onClick={handleNextConfirmation}
+                            onClick={() => handleNextConfirmation(false)}
                             className="w-full py-2 rounded-full border border-white/20 text-slate-300 hover:text-white text-xs font-medium transition-all cursor-pointer hover:bg-white/10"
                           >
                             {confirmationQuestions[step - 1].noText}
@@ -255,32 +273,52 @@ export const ProposalVault: React.FC<ProposalVaultProps> = React.memo(({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center glass-card-luxury p-8 sm:p-14 rounded-3xl border-2 border-amber-400/50 max-w-2xl w-full shadow-2xl space-y-6"
+          className="relative overflow-hidden text-center glass-card-luxury rounded-3xl border-2 border-amber-400/50 max-w-2xl w-full shadow-2xl"
         >
-          <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-2xl shadow-amber-500/50 mx-auto animate-bounce ring-4 ring-white/20">
-            <Unlock className="w-10 h-10" />
+          {/* Video Background completely decoupled from flex content */}
+          <div className="absolute inset-0 z-0 bg-slate-950">
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              disablePictureInPicture
+              controls={false}
+              className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none"
+              style={{ transform: 'translateZ(0)' }}
+              src="/my-proposal-video.mp4" 
+            />
+            {/* Dark gradient overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-slate-950/40 pointer-events-none" />
           </div>
 
-          <div className="space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
-              Proposal Accepted! 🎉
-            </span>
-            <h2 className="font-serif-title text-4xl sm:text-6xl font-bold text-white text-glow">
-              Forever Unlocked
-            </h2>
-            <p className="font-handwriting text-3xl text-rose-200 leading-relaxed">
-              "You just made me the happiest person in the entire universe."
-            </p>
-          </div>
+          {/* Content Wrapper */}
+          <div className="relative z-10 px-6 py-8 sm:px-12 sm:py-10 flex flex-col items-center space-y-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-2xl shadow-amber-500/50 mx-auto animate-bounce ring-4 ring-white/20">
+              <Unlock className="w-10 h-10" />
+            </div>
 
-          <button
-            onClick={onNavigateToForever}
-            className="px-9 py-4 rounded-full bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white font-bold text-sm tracking-wider uppercase shadow-2xl shadow-amber-500/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer border border-white/30"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Enter Forever Sanctuary</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+            <div className="space-y-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-amber-300">
+                Proposal Accepted! 🎉
+              </span>
+              <h2 className="font-serif-title text-4xl sm:text-6xl font-bold text-white text-glow">
+                Forever Unlocked
+              </h2>
+              <p className="font-handwriting text-3xl text-rose-200 leading-relaxed">
+                "You just made me the happiest person in the entire universe."
+              </p>
+            </div>
+
+            <button
+              onClick={onNavigateToForever}
+              className="px-9 py-4 rounded-full bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white font-bold text-sm tracking-wider uppercase shadow-2xl shadow-amber-500/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer border border-white/30"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Enter Forever Sanctuary</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </motion.div>
       )}
 

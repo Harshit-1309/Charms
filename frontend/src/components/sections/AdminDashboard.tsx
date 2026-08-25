@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Activity, Clock, ShieldCheck, X } from 'lucide-react';
+import { Users, Activity, Clock, ShieldCheck, X, Heart } from 'lucide-react';
 
 interface User {
   _id: string;
@@ -65,13 +65,28 @@ export const AdminDashboard: React.FC = () => {
     switch (action) {
       case 'LOGIN': return <ShieldCheck className="w-4 h-4 text-emerald-400" />;
       case 'VISITED_SECTION': return <Activity className="w-4 h-4 text-sky-400" />;
-      default: return <Clock className="w-4 h-4 text-amber-400" />;
+      case 'PROPOSAL_ACCEPTED': return <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />;
+      case 'QUESTION_ANSWERED': return <Clock className="w-4 h-4 text-purple-400" />;
+      case 'PROPOSAL_HUG_REQUESTED': return <Activity className="w-4 h-4 text-amber-400" />;
+      default: return <Clock className="w-4 h-4 text-slate-400" />;
     }
   };
 
   const formatDetails = (details: any) => {
     if (!details || Object.keys(details).length === 0) return '';
-    if (details.section) return `Section: ${details.section}`;
+    
+    if (details.section) {
+      return `Section: ${details.section}`;
+    }
+    
+    if (details.question && details.answer) {
+      return `Q: "${details.question}"\nA: "${details.answer}"`;
+    }
+    
+    if (details.message) {
+      return details.message;
+    }
+    
     return JSON.stringify(details);
   };
 
@@ -171,7 +186,7 @@ export const AdminDashboard: React.FC = () => {
                         {activity.action}
                       </p>
                       {formatDetails(activity.details) && (
-                        <p className="text-[11px] text-slate-400 mt-0.5">
+                        <p className="text-[11px] text-slate-400 mt-0.5 whitespace-pre-wrap">
                           {formatDetails(activity.details)}
                         </p>
                       )}

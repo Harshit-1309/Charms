@@ -83,11 +83,11 @@ export const AboutYouSection: React.FC<AboutYouSectionProps> = React.memo(({
     },
     {
       title: "Your Bold No-Sugar Coffee Ritual",
-      desc: "How you love your coffee strong and completely sugar-free—bold, unapologetic, and so uniquely you. Watching you take that first satisfied sip makes me fall for you all over again."
+      desc: "How you love your coffee strong and completely sugar-free, bold, unapologetic, and so uniquely you. Watching you take that first satisfied sip makes me fall for you all over again."
     },
     {
       title: "Your Unstoppable Full-Body Laugh",
-      desc: "When something is genuinely hilarious and you can't hold back—your eyes crinkle into happy little crescent moons, your whole body shakes, and your pure joy lights up the entire room."
+      desc: "When something is genuinely hilarious and you can't hold back, your eyes crinkle into happy little crescent moons, your whole body shakes, and your pure joy lights up the entire room."
     },
     {
       title: "Your Playful & Feisty Little Threats",
@@ -95,7 +95,7 @@ export const AboutYouSection: React.FC<AboutYouSectionProps> = React.memo(({
     },
     {
       title: "Your Never-Ending Rivalry with Tissues",
-      desc: "Always keeping a stash of tissues close by for your hyperhidrosis and sweaty hands—and how I never care and love holding those sweet, warm hands anyway."
+      desc: "Always keeping a stash of tissues close by for your hyperhidrosis and sweaty hands and how I never care and love holding those sweet, warm hands anyway."
     },
     {
       title: "Your Cute Video Call Tantrums",

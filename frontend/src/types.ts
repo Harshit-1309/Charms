@@ -127,7 +127,7 @@ export interface ConstellationItem {
 export interface DateNightIdea {
   id: string;
   title: string;
-  category: 'Cozy Night In' | 'Outdoor Adventure' | 'Romantic Dinner' | 'Spontaneous Fun';
+  category: 'Cozy Night In' | 'Outdoor Adventure' | 'Romantic Dinner' | 'Spontaneous Fun' | 'Relaxation' | 'Sweet & Simple' | 'Creative Fun';
   description: string;
   setupTime: string;
 }

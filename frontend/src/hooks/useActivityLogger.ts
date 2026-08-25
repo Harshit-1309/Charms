@@ -4,8 +4,9 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export function useActivityLogger() {
   const logActivity = useCallback(async (action: string, details?: any) => {
-    const token = localStorage.getItem('token');
-    if (!token) return; // Only log if logged in
+    const token = localStorage.getItem('auth_token');
+    const isAdmin = localStorage.getItem('auth_is_admin') === 'true';
+    if (!token || isAdmin) return; // Only log if logged in and NOT an admin
 
     try {
       await fetch(`${API_URL}/api/activity/log`, {
