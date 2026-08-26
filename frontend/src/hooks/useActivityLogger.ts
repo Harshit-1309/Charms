@@ -9,7 +9,7 @@ export function useActivityLogger() {
     if (!token || isAdmin) return; // Only log if logged in and NOT an admin
 
     try {
-      await fetch(`${API_URL}/api/activity/log`, {
+      await fetch('/api/activity/log', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
